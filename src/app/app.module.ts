@@ -16,6 +16,8 @@ import { CachePreventionInterceptor } from '@eui/core';
 import { CorsSecurityInterceptor } from '@eui/core';
 import { AddLangParamInterceptor } from '@eui/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UxDynamicModalComponent } from  '@eui/components/legacy/ux-dynamic-modal';
+
 
 
 
@@ -52,6 +54,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 ],
   declarations: [AppComponent, HelloComponent],
   bootstrap: [AppComponent],
+  entryComponents: [
+    UxDynamicModalComponent
+  ]
+
   
 })
 export class AppModule {}
