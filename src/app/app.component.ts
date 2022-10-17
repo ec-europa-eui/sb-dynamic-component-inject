@@ -5,6 +5,11 @@ import { Observable, Subscription } from 'rxjs';
 import { I18nService } from '@eui/core';
 import { LANG_PARAM_KEY } from '@eui/core';
 import { HttpClient } from '@angular/common/http';
+import { Portal, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { UxDynamicComponentService } from '@eui/core';
+import { UxDynamicModalConfig, UxDynamicModalService,UxDynamicModalComponent,} from '@eui/components/legacy/ux-dynamic-modal';
+import { Inject } from '@angular/core';
+import { DYNAMIC_COMPONENT_CONFIG } from '@eui/core';
 
 
 
@@ -28,8 +33,10 @@ export class AppComponent implements OnDestroy {
         { label: 'Title label 3', subLabel: 'Subtitle label' },
         { label: 'Title label 4', subLabel: 'Subtitle label' },
     ];
+    openModalData: any;
+    closeModal: any;
 
-    constructor(private store: Store<any>,protected i18nService: I18nService,protected http: HttpClient,) {
+    constructor(private store: Store<any>,protected i18nService: I18nService,protected http: HttpClient,private dynamicService: UxDynamicComponentService) {
         this.userState = <any>this.store.select(getUserState);
         this.subs.push(this.userState.subscribe((user: UserState) => {
             this.userInfos = { ...user };
@@ -39,6 +46,8 @@ export class AppComponent implements OnDestroy {
     ngOnInit() {
         this.getByLang().subscribe((lang) => {
         });
+        this.dynamicService.add(UxDynamicModalComponent, null,)
+
     }
     
 
@@ -50,4 +59,23 @@ export class AppComponent implements OnDestroy {
             [LANG_PARAM_KEY]: 'lang',
         } })
     }
+    openModal(config: UxDynamicModalConfig): any {
+
+        let component;
+    
+        document.body.classList.add('modal-open');
+    
+        if (config instanceof UxDynamicModalConfig) {
+            if (!(<UxDynamicModalConfig>config).onClose) {
+                (<UxDynamicModalConfig>config).onClose = this.closeModal.bind(this);
+            }
+            component = UxDynamicModalComponent;
+        } else {
+            component = '';
+        }
+    
+        this.openModalData = this.dynamicService.add(component, null, config);
+        return this.openModalData;
+    }
+
 }
